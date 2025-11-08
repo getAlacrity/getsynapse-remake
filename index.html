@@ -1,271 +1,422 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Synapse X remake</title>
-    <link rel="icon" href="Synapse_Icon.png" type="image/png">
-    <link rel="apple-touch-icon" href="Synapse_Icon.png">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<meta charset="UTF-8">
+<title>Synapse X</title>
+<link rel="icon" href="Synapse.png" type="image/png">
+<link rel="apple-touch-icon" href="Synapse.png">
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body, html { height: 100%; font-family: "Segoe UI", Tahoma, sans-serif; color: white; text-align: center; }
+body { background: url("background.png") no-repeat center center fixed; background-size: cover; }
 
-        body, html {
-            height: 100%;
-            font-family: "Segoe UI", Tahoma, sans-serif;
-            color: white;
-            text-align: center;
-        }
+/* Navbar */
+.navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(5px);
+    z-index: 10;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    opacity: 0;
+    animation: fadeIn 0.8s forwards; animation-delay:0.2s;
+}
+.navbar-left { display: flex; align-items: center; gap: 0px; }
+.navbar-logo { width: 180px; height: 40px; object-fit: contain; }
+.navbar ul { list-style: none; display: flex; gap: 20px; }
+.navbar ul li a { text-decoration: none; font-size: 14px; color: #ddd; transition: color 0.3s ease; }
+.navbar ul li a:hover { color: #fff; }
 
-        body {
-            background: url("background.jpg") no-repeat center center fixed;
-            background-size: cover;
-        }
+/* Hero */
+.hero {
+    height: calc(110vh - 150px);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.4);
+    padding: 0 20px;
+}
+.hero h2 { font-size: 48px; margin-bottom: 20px; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.2s; }
+.hero p { font-size:20px; margin-bottom:20px; color:#bbb; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.3s; }
 
-        /* 導覽列 */
-        .navbar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 15px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0,0,0,0.5);
-            backdrop-filter: blur(5px);
-            z-index: 10;
-        }
+.hero .light { color:#FFF}
 
-            .navbar h1 {
-                font-size: 20px;
-                font-weight: bold;
-                color: #fff;
-            }
+.btn-group { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:60px; }
+.btn-group a { opacity:0; animation: slideUpFast 0.5s forwards; }
+.btn-group a:nth-child(1){ animation-delay:0.5s; }
+.btn-group a:nth-child(2){ animation-delay:0.6s; }
 
-            .navbar ul {
-                list-style: none;
-                display: flex;
-                gap: 20px;
-            }
+.btn {
+    display: inline-flex;             /* 🔥 改成 flex 對齊 */
+    align-items: center;              /* 🔥 垂直置中 */
+    justify-content: center;
+    gap: 8px;                         /* icon 與文字間距 */
+    padding: 12px 28px;
+    border-radius: 10px;
+    font-size: 16px;
+    color: white;
+    text-decoration: none;
+    background: rgba(15,15,15,0.5);
+    border: 1px solid rgba(100,100,100,0.7);
+    backdrop-filter: blur(6px);
+    transition: background 0.3s ease, transform 0.2s ease, border 0.3s ease;
+}
 
-                .navbar ul li a {
-                    text-decoration: none;
-                    font-size: 14px;
-                    color: #ddd;
-                    transition: color 0.3s ease;
-                }
+.btn:hover { background: rgba(100,100,100,0.55); transform: translateY(0px); }
+.btn-download { border: 2px solid rgba(125,82,222,0.5); box-shadow:0 0 10px rgba(125,82,222,0.3),0 0 20px rgba(125,82,222,0.2);}
+.btn-purchase { border: 2px solid rgba(30,124,205,0.5); box-shadow:0 0 10px rgba(30,124,205,0.3),0 0 20px rgba(30,124,205,0.2);}
 
-                    .navbar ul li a:hover {
-                        color: #fff;
-                    }
+.btn-download img.icon {
+    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+    flex-shrink: 0;              /* 不被壓縮 */
+    filter: brightness(0.92);    /* 你可以調整亮度 */
+    transition: filter 0.22s ease, transform 0.18s ease;
+}
 
-        /* Hero 區域 */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: rgba(0,0,0,0.4);
-            padding: 0 20px;
-        }
+.btn-download:hover img.icon,
+.btn-download:focus img.icon {
+    filter: brightness(1.2);
+    transform: translateY(-1px) scale(1.02);
+}
 
-            .hero h2 {
-                font-size: 48px;
-                margin-bottom: 20px;
-            }
 
-            .hero p {
-                font-size: 18px;
-                margin-bottom: 20px;
-                color: #ccc;
-            }
+.btn-purchase img.icon {
+    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
+    width: 17px;
+    height: 17px;
+    object-fit: contain;
+    flex-shrink: 0;              /* 不被壓縮 */
+    filter: brightness(0.92);    /* 你可以調整亮度 */
+    transition: filter 0.22s ease, transform 0.18s ease;
+}
 
-        /* 按鈕群組 */
-        .btn-group {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            margin-bottom: 60px;
-        }
+.btn-purchase:hover img.icon,
+.btn-purchase:focus img.icon {
+    filter: brightness(1.2);
+    transform: translateY(-1px) scale(1.02);
+}
 
-        .btn {
-            display: inline-block;
-            padding: 12px 28px;
-            border-radius: 6px;
-            font-size: 16px;
-            color: white;
-            text-decoration: none;
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(6px);
-            transition: background 0.3s ease, transform 0.2s ease;
-        }
+/* Navbar Buttons */
+/* 頂部 navbar 按鈕（模仿 synapse-x.to/v3） */
+/* 讓 navbar 按鈕內的 icon 與文字垂直置中 */
+.btn-novbar {
+    display: inline-flex;        /* <- 重要：讓 icon 與文字能垂直置中 */
+    align-items: center;         /* 垂直置中 */
+    gap: 8px;                    /* icon 與文字間距 */
+    padding: 8px 14px;
+    border-radius: 6px;
+    border: 1px solid rgba(255,255,255,0.06);
+    background: transparent;
+    color: #bfbfbf;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    text-decoration: none;
+    transition: all 0.22s ease;
+    line-height: 1;              /* 避免行高造成位移 */
+}
 
-            .btn:hover {
-                background: rgba(255,255,255,0.2);
-                transform: translateY(-2px);
-            }
+/* 圖片本身不要受 baseline 影響，並固定大小 */
+.btn-novbar img.icon {
+    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;              /* 不被壓縮 */
+    filter: brightness(0.92);    /* 你可以調整亮度 */
+    transition: filter 0.22s ease, transform 0.18s ease;
+}
 
-        /* Dropdown */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
+/* hover 與 focus 的微動畫（文字與 icon 同時變色/放大）*/
+.btn-novbar:hover,
+.btn-novbar:focus {
+    color: #fff;
+    border-color: rgba(145,150,245,0.55);
+    background: rgba(145,150,245,0.06);
+    transform: translateY(-1px);
+}
+.btn-novbar:hover img.icon,
+.btn-novbar:focus img.icon {
+    filter: brightness(1.2);
+    transform: translateY(-1px) scale(1.02);
+}
 
-            .dropdown .arrow {
-                display: inline-block;
-                margin-left: 6px;
-                transition: transform 0.3s ease;
-            }
+/* 若你把按鈕放在 ul 裡，確保 ul 與 li 的對齊 */
+.navbar ul {
+    display: flex;
+    gap: 10px;
+    align-items: center;   /* <- 保證同列置中 */
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.navbar ul li {
+    display: inline-block;
+}
 
-            .dropdown.show .arrow {
-                transform: rotate(180deg);
-            }
+/* 給 navbar-left 的按鈕一點間距（可視需求微調） */
+.navbar-left > a,
+.navbar-left > .btn-novbar {
+    margin-left: 12px;
+}
 
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background: rgba(255,255,255,0.1);
-            backdrop-filter: blur(6px);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 6px;
-            min-width: 180px;
-            margin-top: 5px;
-            z-index: 100;
-            flex-direction: column;
-            opacity: 0;
-            transform: translateY(-10px);
-            transition: opacity 0.3s ease, transform 0.3s ease;
-        }
 
-            .dropdown-content a {
-                color: white;
-                padding: 12px 20px;
-                text-decoration: none;
-                display: block;
-                font-size: 14px;
-                transition: background 0.3s ease;
-            }
 
-                .dropdown-content a:hover {
-                    background: rgba(255,255,255,0.2);
-                    transform: translateY(-1px);
-                }
 
-        .dropdown.show .dropdown-content {
-            display: flex;
-            opacity: 1;
-            transform: translateY(0);
-        }
+/* Features Cards */
+.features {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));width: 72%; margin: 0.5 auto 180px auto;
+}
 
-        /* 特色卡片 */
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            width: 80%;
-            margin: 0 auto 60px auto;
-        }
 
-        .card {
-            background: rgba(255,255,255,0.1);
-            border: 1px solid rgba(255,255,255,0.2);
-            backdrop-filter: blur(8px);
-            border-radius: 10px;
-            padding: 20px;
-            transition: transform 0.2s ease, background 0.3s ease;
-        }
+.card {
+    position: relative;
+    background: rgba(15,15,15,0.7);
+    border:1px solid rgba(100,100,100,0.7);
+    backdrop-filter: blur(15px);
+    border-radius:5px;
+    padding:20px 30px; /* 上方多留空間放 icon */
+     width: 320px;   /* 固定寬度 */
+    height: 320px;  /* 固定高度 */
+    transition: transform 0.3s ease, background 0.3s ease;
+    text-align:left;
+    font-weight:normal;
+    overflow:hidden;
+    opacity:0;
+    transform: translateY(100px);
+    animation:slideUpFast 0.5s forwards;
+}
 
-            .card:hover {
-                background: rgba(255,255,255,0.2);
-                transform: translateY(-5px);
-            }
+.card-icon {
+    position: absolute;
+    top: 20px;      /* 往上浮出卡片 */
+    left: 65px;       /* 水平置中 */
+    transform: translateX(-50%); /* 水平偏移回正中 */
+    width: 50px;     /* 調整大小 */
+    height: 50px;
+    border-radius: 5px;
+    border:1px solid rgba(100,100,100,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0,0,0,0.5); /* 默認藍色，會根據卡片改 */
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+    z-index: 1;
+}
+/* 根據卡片顏色調整圓形背景 */
+.card-red .card-icon { background: rgba(0,0,0,0.5); }
+.card-blue .card-icon { background: rgba(0,0,0,0.5); }
+.card-green .card-icon { background: rgba(0,0,0,0.5); }
+.card-yellow .card-icon { background: rgba(0,0,0,0.5); }
 
-            .card h3 {
-                font-size: 20px;
-                margin-bottom: 10px;
-            }
+/* Icon 圖片置中 */
+.card-icon img {
+    width: 50%;   /* icon 本身相對於圓形大小 */
+    height: 50%;
+    object-fit: contain;
+}
+.card::before { content:""; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; opacity:0.5; pointer-events:none; transition: width 0.4s ease, height 0.4s ease, top 0.4s ease, left 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
+.card-red::before { background: radial-gradient(circle, rgba(255,0,0,0.25) 0%, rgba(255,0,0,0) 70%);}
+.card-blue::before { background: radial-gradient(circle, rgba(30,194,255,0.25) 0%, rgba(30,144,255,0) 70%);}
+.card-green::before { background: radial-gradient(circle, rgba(46,254,113,0.25) 0%, rgba(46,204,113,0) 70%);}
+.card-yellow::before { background: radial-gradient(circle, rgba(255,255,0,0.25) 0%, rgba(255,255,0,0) 70%);}
+.card:hover::before { width:300px; height:300px; top:-100px; left:-100px; opacity:0.6; filter:blur(5px);}
+.card h1 { font-size:30px; margin-bottom:16px; margin-top:70px; margin-left:10px;}
+.card p { font-size:15px; line-height:1.6; color:#B4B4B4; margin-top:6px; margin-left:10px;}
+.card-red { animation-delay:0.3s;}
+.card-blue { animation-delay:0.4s;}
+.card-green { animation-delay:0.5s;}
+.card-yellow { animation-delay:0.6s;}
 
-            .card p {
-                font-size: 14px;
-                color: #ddd;
-            }
-    </style>
+.card p {
+    white-space: pre-line; /* 保留 HTML 內的換行 */
+    line-height: 1.6;      /* 行距 */
+}
+
+.card .bold {
+    font-weight: bold;
+}
+
+
+
+/* Footer */
+.footer { position:absolute; bottom:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:30px 75px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-top:1px solid rgba(255,255,255,0.1); box-shadow:0 -5px 15px rgba(0,0,0,0.4); opacity:0; animation: fadeIn 0.8s forwards; animation-delay:0.2s; }
+.footer-left { text-align:left;}
+.footer-left h1 { font-size:30px; font-weight:700; color:white; margin-bottom:6px;}
+.footer-left h3 { font-size:20px; font-weight:normal; color:#aaa;}
+.footer-right { display:flex; gap:15px; }
+.footer .btn:hover { transform: translateY(-2px); }
+
+.footer-left h1 .version {
+    color: #9196F5; /* 紫色 */
+}
+
+.footer-left h3 .light {
+    color: #FFFF; /* 白色 */
+}
+
+
+/* Copyright */
+.copyright {
+    width: 100%;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    color: #aaa;
+    background: rgba(0,0,0,0);
+    position: fixed;
+    bottom: 150px;
+    left: 0;
+    z-index: 9;
+    opacity:0;
+    animation: slideUpFast 0.6s forwards;
+    animation-delay:0.5s;
+}
+
+/* Animations */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes slideUpFast { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
+</style>
 </head>
 <body>
-    <div class="navbar">
-        <h1>Synapse X remake</h1>
-        <ul>
-            <li><a href="https://getalacrity.github.io/">Alacrity</a></li>
-        </ul>
+
+<!-- Navbar -->
+<div class="navbar">
+   <div class="navbar-left">
+  <img src="logo.png" alt="Logo" class="navbar-logo">
+  <a href="#" class="btn-novbar">
+    <img src="home.png" class="icon"> Home
+  </a>
+  <a href="#" class="btn-novbar">
+    <img src="question.png" class="icon"> Questions
+  </a>
+  <a href="#" class="btn-novbar">
+    <img src="gear.png" class="icon"> Troubleshooting
+  </a>
+</div>
+
+    <ul>
+  <a href="#" class="btn-novbar">
+    <img src="Documentation.png" class="icon"> Documentation
+  </a>
+  <a href="#" class="btn-novbar">
+    <img src="TeamofService.png" class="icon"> Team of Service
+  </a>
+  <a href="#" class="btn-novbar">
+    <img src="status.png" class="icon"> Status
+  </a>
+  <a href="https://discord.gg/3PwAy6Zy2D" class="btn-novbar">
+    <img src="support.png" class="icon"> Support
+  </a>
+    </ul>
+</div>
+
+<!-- Hero -->
+<div class="hero">
+    <h2>Synapse X</h2>
+    <p>The <span class="light">classic solution</span> to <span class="light">script execution.</span></p>
+    <div class="btn-group">
+    <a href="https://discord.gg/3PwAy6Zy2D" class="btn btn-purchase">
+    <img src="purchase.png" class="icon"> Purchase
+    </a>
+    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Synapse%20Bootstrapper.exe" class="btn btn-download">
+    <img src="install.png" class="icon"> Download
+    </a>
     </div>
 
-    <div class="hero">
-        <h2>Synapse X</h2>
-        <p>The ultimate scripting utility for Roblox</p>
-        <p>The remake was made by rty</p>
-
-        <div class="btn-group">
-            <!-- Download Dropdown -->
-            <div class="dropdown">
-                <a href="#" class="btn" id="downloadBtn">Download <span class="arrow">▼</span></a>
-                <div class="dropdown-content" id="dropdownMenu">
-                    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Synapse%20Bootstrapper.exe">Synapse X</a>
-                    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/KRNL.zip">KRNL</a>
-                    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Fluxus.zip">Fluxus</a>
-                    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/AWP-installer.exe">AWP.GG</a>
-                    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/rc7.zip">RC7</a>
-                </div>
-            </div>
-            <a href="https://discord.gg/3PwAy6Zy2D" class="btn">Join Discord</a>
+    <div class="features">
+        <div class="card card-red">
+                <div class="card-icon">
+        <img src="icon-red.png" alt="Powerful Icon">
+    </div>
+            <h1>Powerful</h1>
+            <p><span class="bold">Synapse X</span> has everything you 
+                should need for development, 
+                analysis, and execution. Our API 
+                empowers scripts with many 
+                capabilities not otherwise offered 
+                in a pure vanilla enviroment.</p>
         </div>
-
-        <!-- 特色卡片 -->
-        <div class="features">
-            <div class="card">
-                <h3>Powerful</h3>
-                <p>Synapse X has everything you need for development, analysis, and execution. Our API empowers scripts with capabilities not found elsewhere.</p>
-            </div>
-            <div class="card">
-                <h3>Lightweight</h3>
-                <p>Synapse X is simple yet powerful. We give you the tools and let you play your way.</p>
-            </div>
-            <div class="card">
-                <h3>Stable</h3>
-                <p>Our well-tested execution engine ensures reliability and smooth operation.</p>
-            </div>
-            <div class="card">
-                <h3>Private</h3>
-                <p>Synapse X collects no personal information aside from minimal payment data.</p>
-            </div>
+        <div class="card card-blue">
+                <div class="card-icon">
+        <img src="icon-blue.png" alt="Lightweight Icon">
+    </div>
+            <h1>Lightweight</h1>
+            <p><span class="bold">Synapse X</span> is very simple, yet
+    very powerful coding software.
+    We do not decide where you get
+    your scripts, or what you should
+    use out of the box. We give you
+    the tools and leave you to play.</p>
+        </div>
+        <div class="card card-green">
+                <div class="card-icon">
+        <img src="icon-green.png" alt="Stable Icon">
+    </div>
+            <h1>Stable</h1>
+            <p><span class="bold">Synapse X</span> relies on a well-tested
+    heavy duty execution engine that
+    can run pretty much anything you
+    throw at it. No need to live in fear
+    of bugs and crashes anymore
+    with the stability of our software.</p>
+        </div>
+        <div class="card card-yellow">
+              <div class="card-icon">
+        <img src="icon-yellow.png" alt="Private Icon">
+    </div>
+            <h1>Private</h1>
+            <p><span class="bold">Synapse X</span> collects no personal
+    information, aside from what is
+    requested by our payment
+    processors. The information we
+    do store is very minimal and is
+    explained in our privacy policy.</p>
         </div>
     </div>
+</div>
 
-    <script>
-        const downloadBtn = document.getElementById('downloadBtn');
-        const dropdown = downloadBtn.parentElement;
+<!-- Copyright -->
+<div class="copyright">
+    <p>© 2025 Synapse X rty remake. All rights reserved.</p>
+</div>
 
-        downloadBtn.addEventListener('click', (e) => {
-            e.preventDefault();
-            dropdown.classList.toggle('show');
-        });
+<!-- Footer -->
+<div class="footer">
+   <div class="footer-left">
+    <h1>Synapse X <span class="version">3.0</span></h1>
+    <h3>An <span class="light">evolution</span> of <span class="light">execution.</span> Coming soon to a computer near you.</h3>
+</div>
 
-        window.addEventListener('click', function (e) {
-            if (!dropdown.contains(e.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-    </script>
+    <div class="footer-right">
+        <a href="#" class="btn btn-download">
+    <img src="Twitter.png" class="icon"> Follow us on Twitter!
+    </a>
+            <a href="#" class="btn btn-download">
+    <img src="beta.png" class="icon"> Coming soon!
+    </a>
+    </div>
+</div>
+
+<script>
+const downloadBtn = document.getElementById('downloadBtn');
+const dropdown = downloadBtn.parentElement;
+downloadBtn.addEventListener('click', (e)=>{
+    e.preventDefault(); 
+    dropdown.classList.toggle('show');
+});
+window.addEventListener('click', function(e){
+    if(!dropdown.contains(e.target)){ dropdown.classList.remove('show'); }
+});
+</script>
 </body>
 </html>
-
-
-
-
-
-
-
