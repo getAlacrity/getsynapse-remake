@@ -38,20 +38,22 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     width: 100%;
     max-width: 1920px; /* 保留原始設計最大寬度 */
     margin: 0 auto;
-    padding: 0 0px; /* 小螢幕保留內距 */
+    padding: 0px 0px; /* 小螢幕保留內距 */
 }
 
 /* Hero 永遠置中 */
 .hero {
-    min-height: calc(130vh - 150px); /* 視窗高度 - navbar 高度 */
+    min-height: calc(115vh - 150px);
     display: flex;
     flex-direction: column;
-    justify-content: center; /* 垂直置中 */
-    align-items: center;     /* 水平置中 */
+    justify-content: flex-start; /* 改成 flex-start，讓 padding 有作用 */
+    align-items: center;
     text-align: center;
     background: rgba(0,0,0,0.4);
-    padding: 0 20px;
+    padding: 150px 20px 0 20px; /* 上方增加 100px，整體往下 */
 }
+
+
 .hero h2 { font-size: 48px; margin-bottom: 20px; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.2s; }
 .hero p { font-size:20px; margin-bottom:20px; color:#bbb; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.3s; }
 .hero .light { color:#FFF}
@@ -144,6 +146,32 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     max-width: 1400px; /* 限制卡片總寬度 */
     margin: 0 auto 220px auto;
 }
+
+.features .card {
+    position: relative;
+    background: rgba(15,15,15,0.7);
+    border:1px solid rgba(100,100,100,0.7);
+    backdrop-filter: blur(15px);
+    border-radius:5px;
+    padding:15px 30px;
+    width: 310px;
+    height: 300px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    text-align:left;
+    font-weight:normal;
+    overflow:hidden;
+    opacity:0;
+    transform: translateY(100px);
+    animation: slideUpFast 0.5s forwards;
+}
+
+/* 每張 card 延遲 0.1s */
+.features .card:nth-child(1) { animation-delay: 0.0s; }
+.features .card:nth-child(2) { animation-delay: 0.1s; }
+.features .card:nth-child(3) { animation-delay: 0.2s; }
+.features .card:nth-child(4) { animation-delay: 0.3s; }
+
+
 .card {
     position: relative;
     background: rgba(15,15,15,0.7);
@@ -172,7 +200,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     background: rgba(0,0,0,0.5); box-shadow:0 4px 20px rgba(0,0,0,0.3); z-index:1;
 }
 .card-icon img { width:50%; height:50%; object-fit:contain; }
-.card::before { content:""; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; opacity:0.5; pointer-events:none; transition: all 0.4s ease; }
+.card::before { content:""; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; opacity:0.5; pointer-events:none; transition: all 0.4s ease;}
 .card-red::before { background: radial-gradient(circle, rgba(255,0,0,0.25) 0%, rgba(255,0,0,0) 70%);}
 .card-blue::before { background: radial-gradient(circle, rgba(30,194,255,0.25) 0%, rgba(30,144,255,0) 70%);}
 .card-green::before { background: radial-gradient(circle, rgba(46,254,113,0.25) 0%, rgba(46,204,113,0) 70%);}
@@ -199,6 +227,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     border-top: 1px solid rgba(255,255,255,0.1);
     box-shadow: 0 -5px 15px rgba(0,0,0,0.4);
     color: #ddd;
+    animation:fadeIn 0.5s forwards;
 }
 
 .footer-left {
