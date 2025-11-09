@@ -21,7 +21,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     align-items: center;
     background: rgba(0,0,0,0.5);
     backdrop-filter: blur(5px);
-    z-index: 10;
+    z-index: 20;
     border-bottom: 1px solid rgba(255, 255, 255, 0.3);
     opacity: 0;
     animation: fadeIn 0.8s forwards; animation-delay:0.2s;
@@ -31,6 +31,27 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 .navbar ul { list-style: none; display: flex; gap: 20px; }
 .navbar ul li a { text-decoration: none; font-size: 14px; color: #ddd; transition: color 0.3s ease; }
 .navbar ul li a:hover { color: #fff; }
+
+/* Hamburger */
+.navbar .hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 25px;
+    height: 20px;
+    cursor: pointer;
+}
+.navbar .hamburger span {
+    display: block;
+    height: 3px;
+    width: 100%;
+    background: #ddd;
+    border-radius: 2px;
+    transition: all 0.3s ease;
+}
+.navbar ul.active { display: flex; flex-direction: column; position: absolute; top: 70px; left: 0; width: 100%; background: rgba(0,0,0,0.9); padding: 20px 0; }
+.navbar ul.active li { margin: 10px 0; }
+.navbar ul.active a { font-size: 18px; }
 
 /* Hero */
 .hero {
@@ -44,7 +65,6 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 }
 .hero h2 { font-size: 48px; margin-bottom: 20px; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.2s; }
 .hero p { font-size:20px; margin-bottom:20px; color:#bbb; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.3s; }
-
 .hero .light { color:#FFF}
 
 .btn-group { display:flex; gap:20px; flex-wrap:wrap; justify-content:center; margin-bottom:60px; }
@@ -53,10 +73,10 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 .btn-group a:nth-child(2){ animation-delay:0.6s; }
 
 .btn {
-    display: inline-flex;             /* 🔥 改成 flex 對齊 */
-    align-items: center;              /* 🔥 垂直置中 */
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    gap: 8px;                         /* icon 與文字間距 */
+    gap: 8px;
     padding: 12px 28px;
     border-radius: 10px;
     font-size: 16px;
@@ -68,50 +88,24 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     transition: background 0.3s ease, transform 0.2s ease, border 0.3s ease;
 }
 
+.btn img.icon {
+    width: 20px;      /* 統一大小 */
+    height: 20px;     /* 統一大小 */
+    object-fit: contain;
+    flex-shrink: 0;
+    filter: brightness(0.92);
+    transition: filter 0.22s ease, transform 0.18s ease;
+}
+
 .btn:hover { background: rgba(100,100,100,0.55); transform: translateY(0px); }
 .btn-download { border: 2px solid rgba(125,82,222,0.5); box-shadow:0 0 10px rgba(125,82,222,0.3),0 0 20px rgba(125,82,222,0.2);}
 .btn-purchase { border: 2px solid rgba(30,124,205,0.5); box-shadow:0 0 10px rgba(30,124,205,0.3),0 0 20px rgba(30,124,205,0.2);}
 
-.btn-download img.icon {
-    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
-    width: 17px;
-    height: 17px;
-    object-fit: contain;
-    flex-shrink: 0;              /* 不被壓縮 */
-    filter: brightness(0.92);    /* 你可以調整亮度 */
-    transition: filter 0.22s ease, transform 0.18s ease;
-}
-
-.btn-download:hover img.icon,
-.btn-download:focus img.icon {
-    filter: brightness(1.2);
-    transform: translateY(-1px) scale(1.02);
-}
-
-
-.btn-purchase img.icon {
-    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
-    width: 17px;
-    height: 17px;
-    object-fit: contain;
-    flex-shrink: 0;              /* 不被壓縮 */
-    filter: brightness(0.92);    /* 你可以調整亮度 */
-    transition: filter 0.22s ease, transform 0.18s ease;
-}
-
-.btn-purchase:hover img.icon,
-.btn-purchase:focus img.icon {
-    filter: brightness(1.2);
-    transform: translateY(-1px) scale(1.02);
-}
-
 /* Navbar Buttons */
-/* 頂部 navbar 按鈕（模仿 synapse-x.to/v3） */
-/* 讓 navbar 按鈕內的 icon 與文字垂直置中 */
 .btn-novbar {
-    display: inline-flex;        /* <- 重要：讓 icon 與文字能垂直置中 */
-    align-items: center;         /* 垂直置中 */
-    gap: 8px;                    /* icon 與文字間距 */
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
     padding: 8px 14px;
     border-radius: 6px;
     border: 1px solid rgba(255,255,255,0.06);
@@ -122,71 +116,45 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     letter-spacing: 0.2px;
     text-decoration: none;
     transition: all 0.22s ease;
-    line-height: 1;              /* 避免行高造成位移 */
+    line-height: 1;
 }
-
-/* 圖片本身不要受 baseline 影響，並固定大小 */
 .btn-novbar img.icon {
-    display: inline-block;       /* 避免 img 當 inline 元素造成 baseline 偏移 */
+    display: inline-block;
     width: 16px;
     height: 16px;
     object-fit: contain;
-    flex-shrink: 0;              /* 不被壓縮 */
-    filter: brightness(0.92);    /* 你可以調整亮度 */
+    flex-shrink: 0;
+    filter: brightness(0.92);
     transition: filter 0.22s ease, transform 0.18s ease;
 }
-
-/* hover 與 focus 的微動畫（文字與 icon 同時變色/放大）*/
-.btn-novbar:hover,
-.btn-novbar:focus {
+.btn-novbar:hover, .btn-novbar:focus {
     color: #fff;
     border-color: rgba(145,150,245,0.55);
     background: rgba(145,150,245,0.06);
     transform: translateY(-1px);
 }
-.btn-novbar:hover img.icon,
-.btn-novbar:focus img.icon {
+.btn-novbar:hover img.icon, .btn-novbar:focus img.icon {
     filter: brightness(1.2);
     transform: translateY(-1px) scale(1.02);
 }
 
-/* 若你把按鈕放在 ul 裡，確保 ul 與 li 的對齊 */
-.navbar ul {
-    display: flex;
-    gap: 10px;
-    align-items: center;   /* <- 保證同列置中 */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-}
-.navbar ul li {
-    display: inline-block;
-}
-
-/* 給 navbar-left 的按鈕一點間距（可視需求微調） */
-.navbar-left > a,
-.navbar-left > .btn-novbar {
-    margin-left: 12px;
-}
-
-
-
-
 /* Features Cards */
 .features {
-        display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));width: 70%; margin: 1 auto 220px auto;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    width: 70%;
+    margin: 1 auto 220px auto;
 }
-
-
 .card {
     position: relative;
     background: rgba(15,15,15,0.7);
     border:1px solid rgba(100,100,100,0.7);
     backdrop-filter: blur(15px);
     border-radius:5px;
-    padding:15px 30px; /* 上方多留空間放 icon */
-     width: 310px;   /* 固定寬度 */
-    height: 300px;  /* 固定高度 */
+    padding:15px 30px;
+    width: 310px;
+    height: 300px;
     transition: transform 0.3s ease, background 0.3s ease;
     text-align:left;
     font-weight:normal;
@@ -195,36 +163,24 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     transform: translateY(100px);
     animation:slideUpFast 0.5s forwards;
 }
-
 .card-icon {
     position: absolute;
-    top: 20px;      /* 往上浮出卡片 */
-    left: 65px;       /* 水平置中 */
-    transform: translateX(-50%); /* 水平偏移回正中 */
-    width: 50px;     /* 調整大小 */
+    top: 20px;
+    left: 65px;
+    transform: translateX(-50%);
+    width: 50px;
     height: 50px;
     border-radius: 5px;
     border:1px solid rgba(100,100,100,0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    background: rgba(0,0,0,0.5); /* 默認藍色，會根據卡片改 */
+    background: rgba(0,0,0,0.5);
     box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     z-index: 1;
 }
-/* 根據卡片顏色調整圓形背景 */
-.card-red .card-icon { background: rgba(0,0,0,0.5); }
-.card-blue .card-icon { background: rgba(0,0,0,0.5); }
-.card-green .card-icon { background: rgba(0,0,0,0.5); }
-.card-yellow .card-icon { background: rgba(0,0,0,0.5); }
-
-/* Icon 圖片置中 */
-.card-icon img {
-    width: 50%;   /* icon 本身相對於圓形大小 */
-    height: 50%;
-    object-fit: contain;
-}
-.card::before { content:""; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; opacity:0.5; pointer-events:none; transition: width 0.4s ease, height 0.4s ease, top 0.4s ease, left 0.4s ease, opacity 0.4s ease, filter 0.4s ease; }
+.card-icon img { width: 50%; height: 50%; object-fit: contain; }
+.card::before { content:""; position:absolute; top:-40px; left:-40px; width:200px; height:200px; border-radius:50%; opacity:0.5; pointer-events:none; transition: all 0.4s ease; }
 .card-red::before { background: radial-gradient(circle, rgba(255,0,0,0.25) 0%, rgba(255,0,0,0) 70%);}
 .card-blue::before { background: radial-gradient(circle, rgba(30,194,255,0.25) 0%, rgba(30,144,255,0) 70%);}
 .card-green::before { background: radial-gradient(circle, rgba(46,254,113,0.25) 0%, rgba(46,204,113,0) 70%);}
@@ -232,21 +188,8 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 .card:hover::before { width:300px; height:300px; top:-100px; left:-100px; opacity:0.6; filter:blur(5px);}
 .card h1 { font-size:30px; margin-bottom:16px; margin-top:70px; margin-left:10px;}
 .card p { font-size:15px; line-height:1.6; color:#B4B4B4; margin-top:6px; margin-left:10px;}
-.card-red { animation-delay:0.3s;}
-.card-blue { animation-delay:0.4s;}
-.card-green { animation-delay:0.5s;}
-.card-yellow { animation-delay:0.6s;}
-
-.card p {
-    white-space: pre-line; /* 保留 HTML 內的換行 */
-    line-height: 1.6;      /* 行距 */
-}
-
-.card .bold {
-    font-weight: bold;
-}
-
-
+.card p { white-space: pre-line; line-height: 1.6; }
+.card .bold { font-weight: bold; }
 
 /* Footer */
 .footer { position:absolute; bottom:0; width:100%; display:flex; justify-content:space-between; align-items:center; padding:30px 75px; background: rgba(0,0,0,0.5); backdrop-filter: blur(10px); border-top:1px solid rgba(255,255,255,0.1); box-shadow:0 -5px 15px rgba(0,0,0,0.4); opacity:0; animation: fadeIn 0.8s forwards; animation-delay:0.2s; }
@@ -255,36 +198,23 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 .footer-left h3 { font-size:20px; font-weight:normal; color:#aaa;}
 .footer-right { display:flex; gap:15px; }
 .footer .btn:hover { transform: translateY(-2px); }
-
-.footer-left h1 .version {
-    color: #9196F5; /* 紫色 */
-}
-
-.footer-left h3 .light {
-    color: #FFFF; /* 白色 */
-}
-
+.footer-left h1 .version { color: #9196F5; }
+.footer-left h3 .light { color: #FFFF; }
 
 /* Copyright */
-.copyright {
-    width: 100%;
-    text-align: center;
-    padding: 10px 0;
-    font-size: 14px;
-    color: #aaa;
-    background: rgba(0,0,0,0);
-    position: fixed;
-    bottom: 150px;
-    left: 0;
-    z-index: 9;
-    opacity:0;
-    animation: slideUpFast 0.6s forwards;
-    animation-delay:0.5s;
-}
+.copyright { width: 100%; text-align: center; padding: 10px 0; font-size: 14px; color: #aaa; background: rgba(0,0,0,0); position: fixed; bottom: 150px; left: 0; z-index: 9; opacity:0; animation: slideUpFast 0.6s forwards; animation-delay:0.5s; }
 
 /* Animations */
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUpFast { from { opacity: 0; transform: translateY(100px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Responsive */
+@media (max-width: 1024px) { .features { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 768px) {
+    .features { grid-template-columns: 1fr; }
+    .navbar ul { display: none; flex-direction: column; position: absolute; top: 70px; left:0; width: 100%; background: rgba(0,0,0,0.9); padding:20px 0; }
+    .navbar .hamburger { display: flex; }
+}
 </style>
 </head>
 <body>
@@ -292,32 +222,29 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 <!-- Navbar -->
 <div class="navbar">
    <div class="navbar-left">
-  <img src="logo.png" alt="Logo" class="navbar-logo">
-  <a href="#" class="btn-novbar">
-    <img src="home.png" class="icon"> Home
-  </a>
-  <a href="#" class="btn-novbar">
-    <img src="question.png" class="icon"> Questions
-  </a>
-  <a href="#" class="btn-novbar">
-    <img src="gear.png" class="icon"> Troubleshooting
-  </a>
-</div>
+      <img src="logo.png" alt="Logo" class="navbar-logo">
+      <a href="#" class="btn-novbar">
+        <img src="home.png" class="icon"> Home
+      </a>
+      <a href="#" class="btn-novbar">
+        <img src="question.png" class="icon"> Questions
+      </a>
+      <a href="#" class="btn-novbar">
+        <img src="gear.png" class="icon"> Troubleshooting
+      </a>
+      <div class="hamburger" id="hamburger">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+   </div>
 
-    <ul>
-  <a href="#" class="btn-novbar">
-    <img src="Documentation.png" class="icon"> Documentation
-  </a>
-  <a href="#" class="btn-novbar">
-    <img src="TeamofService.png" class="icon"> Team of Service
-  </a>
-  <a href="#" class="btn-novbar">
-    <img src="status.png" class="icon"> Status
-  </a>
-  <a href="https://discord.gg/3PwAy6Zy2D" class="btn-novbar">
-    <img src="support.png" class="icon"> Support
-  </a>
-    </ul>
+   <ul id="nav-menu">
+      <li><a href="#" class="btn-novbar"><img src="Documentation.png" class="icon"> Documentation</a></li>
+      <li><a href="#" class="btn-novbar"><img src="TeamofService.png" class="icon"> Team of Service</a></li>
+      <li><a href="#" class="btn-novbar"><img src="status.png" class="icon"> Status</a></li>
+      <li><a href="https://discord.gg/3PwAy6Zy2D" class="btn-novbar"><img src="support.png" class="icon"> Support</a></li>
+   </ul>
 </div>
 
 <!-- Hero -->
@@ -325,19 +252,13 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     <h2>Synapse X</h2>
     <p>The <span class="light">classic solution</span> to <span class="light">script execution.</span></p>
     <div class="btn-group">
-    <a href="https://discord.gg/3PwAy6Zy2D" class="btn btn-purchase">
-    <img src="purchase.png" class="icon"> Purchase
-    </a>
-    <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Synapse%20Bootstrapper.exe" class="btn btn-download">
-    <img src="install.png" class="icon"> Download
-    </a>
+        <a href="#" class="btn btn-purchase"><img src="purchase.png" class="icon"> Purchase</a>
+        <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Synapse%20Bootstrapper.exe" class="btn btn-download"><img src="install.png" class="icon"> Download</a>
     </div>
 
     <div class="features">
         <div class="card card-red">
-                <div class="card-icon">
-        <img src="icon-red.png" alt="Powerful Icon">
-    </div>
+            <div class="card-icon"><img src="icon-red.png" alt="Powerful Icon"></div>
             <h1>Powerful</h1>
             <p><span class="bold">Synapse X</span> has everything you 
                 should need for development, 
@@ -347,9 +268,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
                 in a pure vanilla enviroment.</p>
         </div>
         <div class="card card-blue">
-                <div class="card-icon">
-        <img src="icon-blue.png" alt="Lightweight Icon">
-    </div>
+            <div class="card-icon"><img src="icon-blue.png" alt="Lightweight Icon"></div>
             <h1>Lightweight</h1>
             <p><span class="bold">Synapse X</span> is very simple, yet
     very powerful coding software.
@@ -359,9 +278,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     the tools and leave you to play.</p>
         </div>
         <div class="card card-green">
-                <div class="card-icon">
-        <img src="icon-green.png" alt="Stable Icon">
-    </div>
+            <div class="card-icon"><img src="icon-green.png" alt="Stable Icon"></div>
             <h1>Stable</h1>
             <p><span class="bold">Synapse X</span> relies on a well-tested
     heavy duty execution engine that
@@ -371,9 +288,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     with the stability of our software.</p>
         </div>
         <div class="card card-yellow">
-              <div class="card-icon">
-        <img src="icon-yellow.png" alt="Private Icon">
-    </div>
+            <div class="card-icon"><img src="icon-yellow.png" alt="Private Icon"></div>
             <h1>Private</h1>
             <p><span class="bold">Synapse X</span> collects no personal
     information, aside from what is
@@ -395,28 +310,18 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
    <div class="footer-left">
     <h1>Synapse X <span class="version">3.0</span></h1>
     <h3>An <span class="light">evolution</span> of <span class="light">execution.</span> Coming soon to a computer near you.</h3>
-</div>
-
-    <div class="footer-right">
-        <a href="#" class="btn btn-download">
-    <img src="Twitter.png" class="icon"> Follow us on Twitter!
-    </a>
-            <a href="#" class="btn btn-download">
-    <img src="beta.png" class="icon"> Coming soon!
-    </a>
-    </div>
+   </div>
+   <div class="footer-right">
+        <a href="https://discord.gg/3PwAy6Zy2D" class="btn btn-download"><img src="Twitter.png" class="icon"> Follow us on Twitter!</a>
+        <a href="#" class="btn btn-download"><img src="beta.png" class="icon"> Coming soon!</a>
+   </div>
 </div>
 
 <script>
-const downloadBtn = document.getElementById('downloadBtn');
-const dropdown = downloadBtn.parentElement;
-downloadBtn.addEventListener('click', (e)=>{
-    e.preventDefault(); 
-    dropdown.classList.toggle('show');
-});
-window.addEventListener('click', function(e){
-    if(!dropdown.contains(e.target)){ dropdown.classList.remove('show'); }
-});
+const hamburger = document.getElementById('hamburger');
+const navMenu = document.getElementById('nav-menu');
+hamburger.addEventListener('click', () => { navMenu.classList.toggle('active'); });
 </script>
+
 </body>
 </html>
