@@ -58,6 +58,72 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 .hero p { font-size:20px; margin-bottom:20px; color:#bbb; opacity:0; animation: slideUpFast 0.5s forwards; animation-delay:0.3s; }
 .hero .light { color:#FFF}
 
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    width: 600px;    /* 光暈稍大，覆蓋大標題、副標題 */
+    height: 250px;
+    border-radius: 50%;
+    background: radial-gradient(ellipse at center, rgba(255,80,80,0.3), rgba(255,80,80,0));
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    filter: blur(100px) hue-rotate(0deg);
+    animation: haloGlowHue 12s linear infinite;
+}
+
+@keyframes haloGlowHue {
+    0%   { filter: blur(50px) hue-rotate(0deg); }
+    100% { filter: blur(50px) hue-rotate(360deg); }
+}
+
+
+/* Hero 文字保持在光暈前面 */
+.hero h2,
+.hero p {
+    position: relative;
+    z-index: 1;
+    color: #fff;
+    text-shadow: none;
+    animation: slideUpFast 0.5s forwards;
+}
+
+/* 光暈柔和變色動畫 */
+@keyframes haloGlowSmooth {
+    0% { background: radial-gradient(ellipse at center, rgba(255,80,80,1), rgba(255,80,80,0)); }
+    25% { background: radial-gradient(ellipse at center, rgba(80,120,255,1), rgba(80,160,255,0)); }
+    50% { background: radial-gradient(ellipse at center, rgba(120,255,180,1), rgba(120,255,180,0)); }
+    75% { background: radial-gradient(ellipse at center, rgba(255,220,120,1), rgba(255,220,120,0)); }
+    100% { background: radial-gradient(ellipse at center, rgba(255,80,80,1), rgba(255,80,80,0)); }
+}
+
+/* 卡片光暈：保持，但文字不發光 */
+.features .card h1,
+.features .card p {
+    text-shadow: none !important; /* 移除文字光暈 */
+    color: #fff; /* 或 #B4B4B4 */
+}
+
+/* 卡片動畫保持，文字隨容器一起出現 */
+.features .card {
+    position: relative;
+    background: rgba(15,15,15,0.7);
+    border:1px solid rgba(100,100,100,0.7);
+    backdrop-filter: blur(15px);
+    border-radius:5px;
+    padding:15px 30px;
+    width: 310px;
+    height: 300px;
+    transition: transform 0.3s ease, background 0.3s ease;
+    text-align:left;
+    font-weight:normal;
+    overflow:hidden;
+    opacity:0;
+    transform: translateY(100px);
+    animation: slideUpFast 0.5s forwards; /* 文字會跟容器一起顯示 */
+}
+
 /* Buttons */
 /* Buttons 保持水平置中 */
 .btn-group {
@@ -293,6 +359,7 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     .navbar-left, .navbar ul { flex-wrap: wrap; justify-content:center; }
     .btn-group { flex-direction: column; gap:15px; }
 }
+
 </style>
 </head>
 <body>
@@ -389,4 +456,3 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 
 </body>
 </html>
-
