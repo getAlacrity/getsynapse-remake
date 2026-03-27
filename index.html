@@ -389,6 +389,79 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     .btn-group { flex-direction: column; gap:15px; }
 }
 
+ /* 背景模糊遮罩 */
+#blurOverlay {
+    position: fixed;
+    inset: 0;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: rgba(0, 0, 0, 0.55);
+    z-index: 999;
+    display: none;
+}
+
+/* Modal 容器（真正置中） */
+#keyModal {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 玻璃卡片 */
+.glass-box {
+    position: relative;
+    min-width: 320px;
+    max-width: 420px;
+
+    padding: 28px 40px;
+    border-radius: 16px;
+    text-align: center;
+
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+
+    box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.6),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    color: #fff;
+
+    animation: modalPop 0.25s ease-out forwards;
+}
+
+/* 標題 */
+.glass-box h2 {
+    margin-bottom: 14px;
+    font-size: 20px;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* Key 文字 */
+#keyText {
+    font-size: 16px;
+    color: #8ab4ff;
+    word-break: break-all;
+    letter-spacing: 1px;
+}
+
+/* 入場動畫（更乾淨） */
+@keyframes modalPop {
+    from {
+        opacity: 0;
+        transform: scale(0.92);
+    }
+    to {
+        opacity: 0.8;
+        transform: scale(1);
+    }
+}
 </style>
 </head>
 <body>
@@ -416,7 +489,9 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
     <h2>Synapse X</h2>
     <p>The <span class="light">classic solution</span> to <span class="light">script execution.</span></p>
     <div class="btn-group">
-        <a href="https://discord.gg/3PwAy6Zy2D" class="btn btn-purchase"><img src="purchase.png" class="icon"> Purchase</a>
+        <a href="#" onclick="handlePurchase()" class="btn btn-purchase">
+    <img src="purchase.png" class="icon"> Purchase
+</a>
         <a href="https://github.com/getAlacrity/downloads/raw/refs/heads/main/Synapse%20Bootstrapper.exe" class="btn btn-download"><img src="install.png" class="icon"> Download</a>
     </div>
 
@@ -466,6 +541,17 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 
 </div>
 
+<!-- Blur Overlay -->
+<div id="blurOverlay"></div>
+
+<!-- Key Modal -->
+<div id="keyModal">
+    <div class="glass-box">
+        <h2>Your Key</h2>
+        <p id="keyText">Loading...</p>
+    </div>
+</div>
+
 <!-- Footer 固定 -->
 <div class="footer">
    <div class="footer-left">
@@ -480,10 +566,69 @@ body { background: url("background.png") no-repeat center center fixed; backgrou
 
 <!-- Copyright -->
 <div class="copyright">
-    <p>© 2026 Synapse X remake. All rights reserved.</p>
+    <p>© 2025 Synapse X remake. All rights reserved.</p>
 </div>
+
+<script>
+
+const blur = document.getElementById("blurOverlay");
+const modal = document.getElementById("keyModal");
+const keyText = document.getElementById("keyText");
+
+// 產生 key
+function generateKey() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let key = "SYN-";
+
+    for (let i = 0; i < 16; i++) {
+        key += chars[Math.floor(Math.random() * chars.length)];
+    }
+
+    return key;
+}
+
+// 本機固定 key
+function getOrCreateKey() {
+    let key = localStorage.getItem("user_key");
+
+    if (!key) {
+        key = generateKey();
+        localStorage.setItem("user_key", key);
+    }
+
+    return key;
+}
+
+// 顯示 modal
+function showKey(key) {
+    keyText.innerText = key;
+    blur.style.display = "block";
+    modal.style.display = "flex";
+}
+
+// Purchase 按鈕
+function handlePurchase() {
+    const key = getOrCreateKey();
+    showKey(key);
+}
+
+// 關閉 modal
+function closeModal() {
+    blur.style.display = "none";
+    modal.style.display = "none";
+}
+
+// 點背景關閉
+blur.addEventListener("click", closeModal);
+
+// 防止點 modal 內容也觸發（更穩）
+modal.addEventListener("click", function (e) {
+    if (e.target === modal) {
+        closeModal();
+    }
+});
+</script>
 
 </body>
 </html>
-
 
